@@ -12,7 +12,7 @@ export async function POST(
 
     try {
         let newRecord;
-        // Usamos un switch para decidir en qué tabla crear el registro
+        // Use switch to decide which table to create the record in
         switch (slug) {
             case 'produccion':
                 newRecord = await prisma.produccion.create({ data });
@@ -28,14 +28,14 @@ export async function POST(
                 break;
             default:
                 return NextResponse.json(
-                    { error: 'Dimensión no válida' },
+                    { error: 'Invalid dimension' },
                     { status: 400 }
                 );
         }
         return NextResponse.json(newRecord, { status: 201 });
     } catch (error) {
         return NextResponse.json(
-            { error: 'Error al crear el registro' },
+            { error: 'Error creating record' },
             { status: 500 }
         );
     }
