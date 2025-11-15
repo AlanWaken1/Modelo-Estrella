@@ -1,0 +1,221 @@
+// Prisma Schema para Modelo Estrella
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// DIMENSIÓN: PRODUCCIÓN
+// ============================================
+model Produccion {
+  id                String   @id @default(cuid())
+  fecha             DateTime @default(now())
+  unidadesProducidas Int
+  productosDefectuosos Int     @default(0)
+  tiempoProduccion  Float    // en horas
+  costoProduccion   Float
+  eficiencia        Float    // porcentaje
+  turno             String   // mañana, tarde, noche
+  linea             String   // línea de producción
+  operador          String
+  observaciones     String?  @db.Text
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([fecha])
+  @@index([linea])
+  @@index([turno])
+}
+
+// ============================================
+// DIMENSIÓN: FINANZAS
+// ============================================
+model Finanzas {
+  id                String   @id @default(cuid())
+  fecha             DateTime @default(now())
+  tipo              String   // ingreso, egreso, inversión
+  categoria         String   // ventas, gastos operativos, salarios, etc.
+  monto             Float
+  moneda            String   @default("MXN")
+  metodoPago        String?  // efectivo, transferencia, tarjeta, etc.
+  proveedor         String?
+  cliente           String?
+  factura           String?  @unique
+  concepto          String
+  departamento      String
+  aprobadoPor       String?
+  observaciones     String?  @db.Text
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([fecha])
+  @@index([tipo])
+  @@index([categoria])
+  @@index([departamento])
+}
+
+// ============================================
+// DIMENSIÓN: RECURSOS HUMANOS
+// ============================================
+model RecursosHumanos {
+  id                String   @id @default(cuid())
+  fecha             DateTime @default(now())
+  empleadoId        String
+  nombreEmpleado    String
+  departamento      String
+  puesto            String
+  tipo              String   // asistencia, vacaciones, capacitación, evaluación, incidencia
+  horasTrabajadas   Float?
+  horasExtra        Float?   @default(0)
+  ausencias         Int?     @default(0)
+  calificacion      Float?   // para evaluaciones
+  cursosCompletados Int?     @default(0)
+  incidencia        String?  // tipo de incidencia
+  salario           Float?
+  bonos             Float?   @default(0)
+  observaciones     String?  @db.Text
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([fecha])
+  @@index([empleadoId])
+  @@index([departamento])
+  @@index([tipo])
+}
+
+// ============================================
+// DIMENSIÓN: DESARROLLO DIGITAL
+// ============================================
+model DesarrolloDigital {
+  id                String   @id @default(cuid())
+  fecha             DateTime @default(now())
+  proyecto          String
+  tipo              String   // desarrollo, mantenimiento, infraestructura, seguridad
+  categoria         String   // frontend, backend, devops, qa, diseño
+  tareas            Int      // número de tareas completadas
+  bugs              Int      @default(0)
+  prioridad         String   // baja, media, alta, crítica
+  estado            String   // planificación, desarrollo, testing, producción
+  desarrollador     String
+  tiempoEstimado    Float    // en horas
+  tiempoReal        Float    // en horas
+  tecnologias       String[] // array de tecnologías usadas
+  repositorio       String?
+  sprint            String?
+  observaciones     String?  @db.Text
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([fecha])
+  @@index([proyecto])
+  @@index([tipo])
+  @@index([estado])
+  @@index([prioridad])
+}
+
+// ============================================
+// REPORTES Y ARCHIVOS
+// ============================================
+model Reporte {
+  id                String   @id @default(cuid())
+  titulo            String
+  descripcion       String?  @db.Text
+  tipo              String   // mensual, trimestral, anual, especial
+  dimension         String   // produccion, finanzas, rrhh, digital
+  fechaInicio       DateTime
+  fechaFin          DateTime
+  archivoUrl        String?
+  archivoNombre     String?
+  archivoTamanio    Int?     // en bytes
+  generadoPor       String
+  formato           String   // pdf, excel, word
+  resumenIA         String?  @db.Text // resumen generado por IA
+  insightsIA        Json?    // insights generados por IA
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([dimension])
+  @@index([tipo])
+  @@index([fechaInicio])
+}
+
+// ============================================
+// BÚSQUEDAS Y ANÁLISIS DE IA
+// ============================================
+model BusquedaIA {
+  id                String   @id @default(cuid())
+  query             String   @db.Text
+  dimension         String?  // filtro opcional por dimensión
+  fechaInicio       DateTime?
+  fechaFin          DateTime?
+  resultados        Json     // resultados de la búsqueda
+  resumen           String?  @db.Text
+  insights          Json?    // insights generados
+  relevancia        Float?   // score de relevancia
+  userId            String?  // para futuro sistema de usuarios
+  createdAt         DateTime @default(now())
+
+  @@index([dimension])
+  @@index([createdAt])
+}
+
+// ============================================
+// NOTIFICACIONES Y ALERTAS
+// ============================================
+model Notificacion {
+  id                String   @id @default(cuid())
+  tipo              String   // info, warning, error, success
+  titulo            String
+  mensaje           String   @db.Text
+  dimension         String?
+  registroId        String?  // ID del registro relacionado
+  leida             Boolean  @default(false)
+  prioridad         String   @default("normal") // baja, normal, alta
+  userId            String?  // para futuro sistema de usuarios
+  metadata          Json?    // datos adicionales
+  createdAt         DateTime @default(now())
+  expiresAt         DateTime?
+
+  @@index([leida])
+  @@index([dimension])
+  @@index([createdAt])
+}
+
+// ============================================
+// CONFIGURACIÓN Y METADATOS
+// ============================================
+model ConfiguracionSistema {
+  id                String   @id @default(cuid())
+  clave             String   @unique
+  valor             Json
+  descripcion       String?
+  categoria         String   // api, ui, notificaciones, etc.
+  updatedAt         DateTime @updatedAt
+
+  @@index([categoria])
+}
+
+// ============================================
+// MÉTRICAS Y KPIs CALCULADOS
+// ============================================
+model MetricaCalculada {
+  id                String   @id @default(cuid())
+  nombre            String
+  dimension         String
+  valor             Float
+  unidad            String?  // %, $, unidades, etc.
+  periodo           String   // diario, semanal, mensual
+  fecha             DateTime
+  formula           String?  @db.Text
+  metadata          Json?
+  createdAt         DateTime @default(now())
+
+  @@unique([nombre, dimension, periodo, fecha])
+  @@index([dimension])
+  @@index([fecha])
+  @@index([nombre])
+}
