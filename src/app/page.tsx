@@ -1,103 +1,184 @@
-import Image from "next/image";
+import { DashboardLayout } from '@/components/dashboard/dashboard-layout'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { DollarSign, Factory, Users, Laptop, TrendingUp, Activity } from 'lucide-react'
 
-export default function Home() {
+export default function HomePage() {
+  const stats = [
+    {
+      title: 'Ingresos Totales',
+      value: '$124,500',
+      change: '+12.5%',
+      icon: DollarSign,
+      trend: 'up',
+    },
+    {
+      title: 'Producción',
+      value: '18,500 unidades',
+      change: '+8.2%',
+      icon: Factory,
+      trend: 'up',
+    },
+    {
+      title: 'Empleados',
+      value: '43',
+      change: '+5',
+      icon: Users,
+      trend: 'up',
+    },
+    {
+      title: 'Inversión Digital',
+      value: '$15,500',
+      change: '+25.3%',
+      icon: Laptop,
+      trend: 'up',
+    },
+  ]
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <DashboardLayout>
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h1 className="text-4xl font-bold gradient-text mb-2">
+              Bienvenido a TioSam BI
+            </h1>
+            <p className="text-muted-foreground">
+              Sistema de Business Intelligence con análisis impulsado por IA
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" className="glass">
+              <Activity className="mr-2 h-4 w-4" />
+              Exportar
+            </Button>
+            <Button className="bg-gradient-to-r from-primary to-secondary hover:opacity-90">
+              <TrendingUp className="mr-2 h-4 w-4" />
+              Analizar con IA
+            </Button>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+
+        {/* Stats Grid */}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {stats.map((stat) => {
+            const Icon = stat.icon
+            return (
+              <Card key={stat.title} className="glass-card border-border/50 hover:border-primary/50 transition-all duration-300">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">
+                    {stat.title}
+                  </CardTitle>
+                  <Icon className="h-4 w-4 text-primary" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stat.value}</div>
+                  <p className="text-xs text-green-500 flex items-center mt-1">
+                    <TrendingUp className="h-3 w-3 mr-1" />
+                    {stat.change} vs mes anterior
+                  </p>
+                </CardContent>
+              </Card>
+            )
+          })}
+        </div>
+
+        {/* Quick Access Cards */}
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card className="glass-card border-border/50">
+            <CardHeader>
+              <CardTitle>Dimensiones del Modelo Estrella</CardTitle>
+              <CardDescription>
+                Accede a los diferentes módulos de análisis
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Button variant="outline" className="w-full justify-start glass" asChild>
+                <a href="/dimensions/finanzas">
+                  <DollarSign className="mr-2 h-4 w-4" />
+                  Finanzas
+                </a>
+              </Button>
+              <Button variant="outline" className="w-full justify-start glass" asChild>
+                <a href="/dimensions/produccion">
+                  <Factory className="mr-2 h-4 w-4" />
+                  Producción
+                </a>
+              </Button>
+              <Button variant="outline" className="w-full justify-start glass" asChild>
+                <a href="/dimensions/recursos-humanos">
+                  <Users className="mr-2 h-4 w-4" />
+                  Recursos Humanos
+                </a>
+              </Button>
+              <Button variant="outline" className="w-full justify-start glass" asChild>
+                <a href="/dimensions/desarrollo-digital">
+                  <Laptop className="mr-2 h-4 w-4" />
+                  Desarrollo Digital
+                </a>
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="glass-card border-border/50">
+            <CardHeader>
+              <CardTitle>Análisis Recientes</CardTitle>
+              <CardDescription>
+                Últimos insights generados por IA
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <div className="flex items-start gap-3 p-3 rounded-lg bg-primary/5 border border-primary/20">
+                  <div className="h-2 w-2 rounded-full bg-primary mt-1.5" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">Análisis de Gastos Q1</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      El marketing representa el 45% del gasto total. Oportunidad de optimización detectada.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 p-3 rounded-lg bg-secondary/5 border border-secondary/20">
+                  <div className="h-2 w-2 rounded-full bg-secondary mt-1.5" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">Eficiencia de Producción</p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Eficiencia promedio del 90.25%. La panadería supera las metas consistentemente.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Info Card */}
+        <Card className="glass-strong border-border/50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Activity className="h-5 w-5 text-primary" />
+              Estado del Sistema
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="flex items-center gap-2">
+                <div className="h-3 w-3 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-sm">Base de datos: Conectada</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="h-3 w-3 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-sm">Realtime: Activo</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="h-3 w-3 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-sm">IA: Disponible</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </DashboardLayout>
+  )
 }
